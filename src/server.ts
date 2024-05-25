@@ -1,3 +1,5 @@
+import "reflect-metadata"; // Import reflect-metadata at the beginning of your application
+
 import Container, { Service } from "typedi";
 import { IApp } from "./interfaces/app.interface";
 import { useContainer, useExpressServer } from "routing-controllers";
@@ -14,8 +16,8 @@ export default class ExpressServer implements IApp<Application> {
   readonly server: Application;
   readonly port: number;
 
-  private readonly API_VERSION = process.env.API_VERSION ?? "v1";
-  private readonly SERVICE_NAME = "pages";
+  private readonly API_VERSION = "v1";
+  private readonly SERVICE_NAME = "api";
 
   constructor(port = 3000) {
     this.port = port;
@@ -25,7 +27,7 @@ export default class ExpressServer implements IApp<Application> {
 
   public run(): void {
     this.server.listen(this.port, () => {
-      `service running at port ${this.port}`;
+      console.log(`Server is running at port ${this.port}`); // Logging the server running message
     });
   }
 
@@ -44,12 +46,12 @@ export default class ExpressServer implements IApp<Application> {
     app.use(userAgent.express());
 
     app.get("/", (_req: Request, res: Response) => {
-      res.status(200).send("server is running... so stop bothering it");
+      res.status(200).send("Server is running... so stop bothering it");
     });
 
     useContainer(Container);
 
-    let controllersExtName = "js";
+    let controllersExtName = "ts";
     if (process.env.LOCAL_NODE_ENV === "true") {
       controllersExtName = "ts";
     }
@@ -57,7 +59,7 @@ export default class ExpressServer implements IApp<Application> {
     const server = useExpressServer(app, {
       routePrefix: `/${this.API_VERSION}/${this.SERVICE_NAME}`,
       controllers: [
-        join(__dirname + `/domain/*.controller.${controllersExtName}`),
+        join(__dirname + `/domain/**/*.controller.${controllersExtName}`),
       ],
     });
 
