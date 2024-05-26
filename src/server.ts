@@ -1,5 +1,4 @@
-import "reflect-metadata"; // Import reflect-metadata at the beginning of your application
-
+import "reflect-metadata";
 import Container, { Service } from "typedi";
 import { IApp } from "./interfaces/app.interface";
 import { useContainer, useExpressServer } from "routing-controllers";
@@ -10,6 +9,7 @@ import cookieParser from "cookie-parser";
 import express, { Application, Request, Response } from "express";
 import CORS from "./middleware/cors";
 import { join } from "path";
+import "dotenv/config";
 
 @Service()
 export default class ExpressServer implements IApp<Application> {
@@ -27,7 +27,7 @@ export default class ExpressServer implements IApp<Application> {
 
   public run(): void {
     this.server.listen(this.port, () => {
-      console.log(`Server is running at port ${this.port}`); // Logging the server running message
+      console.log(`Server is running at port ${this.port}`);
     });
   }
 
@@ -51,7 +51,7 @@ export default class ExpressServer implements IApp<Application> {
 
     useContainer(Container);
 
-    let controllersExtName = "ts";
+    let controllersExtName = "js";
     if (process.env.LOCAL_NODE_ENV === "true") {
       controllersExtName = "ts";
     }

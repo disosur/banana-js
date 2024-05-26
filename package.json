@@ -4,7 +4,7 @@
   "description": "A very opinionated way on how I enjoy structuring and writing my Typescript backend applications",
   "main": "index.js",
   "scripts": {
-    "dev": "tsnd src/index.ts",
+    "dev": "ts-node-dev --respawn --transpile-only --watch src src/index.ts",
     "build": "rimraf dist && tsc -p .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
